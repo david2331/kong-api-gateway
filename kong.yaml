@@ -1,0 +1,294 @@
+_format_version: "1.1"
+consumers:
+- keyauth_credentials:
+  - key: CYHXM3WPENUOI3mY7sUgjKd80A3BRGSZ
+  username: Contoso
+- keyauth_credentials:
+  - key: zNi12nFHkS5nWy0M1FWfo4RiteScOUCi
+  username: Kantoso
+plugins:
+- config:
+    anonymous: null
+    hide_credentials: false
+    key_in_body: false
+    key_in_header: true
+    key_in_query: true
+    key_names:
+    - x-api-key
+    run_on_preflight: true
+  enabled: true
+  name: key-auth
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+- config:
+    day: null
+    fault_tolerant: true
+    header_name: null
+    hide_client_headers: false
+    hour: null
+    limit_by: consumer
+    minute: 10
+    month: null
+    path: null
+    policy: cluster
+    redis_database: 0
+    redis_host: null
+    redis_password: null
+    redis_port: 6379
+    redis_server_name: null
+    redis_ssl: false
+    redis_ssl_verify: false
+    redis_timeout: 2000
+    redis_username: null
+    second: null
+    year: null
+  enabled: true
+  name: rate-limiting
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+- config:
+    client_errors_severity: info
+    custom_fields_by_lua: null
+    facility: null
+    log_level: debug
+    server_errors_severity: info
+    successful_severity: info
+  enabled: true
+  name: syslog
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+services:
+- connect_timeout: 5000
+  host: petstore
+  name: pet
+  path: /api/v3/pet
+  port: 443
+  protocol: https
+  read_timeout: 5000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    - POST
+    - DELETE
+    - PUT
+    name: pet
+    path_handling: v0
+    paths:
+    - /pet
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 5000
+- connect_timeout: 6000
+  host: petstore
+  name: pet_findByStatus
+  path: /api/v3/pet/findByStatus
+  port: 443
+  protocol: https
+  read_timeout: 6000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    name: pet_findByStatus_route
+    path_handling: v0
+    paths:
+    - /pet/findByStatus
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 6000
+- connect_timeout: 5000
+  host: petstore
+  name: pet_findByStatus2
+  path: /api/v3/pet/findByStatus
+  port: 443
+  protocol: https
+  read_timeout: 5000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    name: pet_findByStatus2
+    path_handling: v0
+    paths:
+    - /pet/findByStatus2
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 5000
+- connect_timeout: 5000
+  host: petstore
+  name: pet_findByTags
+  path: /api/v3/pet/findByTags
+  port: 443
+  protocol: https
+  read_timeout: 5000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    name: pet_findByTags
+    path_handling: v0
+    paths:
+    - /pet/findByTags
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 5000
+- connect_timeout: 5000
+  host: petstore
+  name: store_inventory
+  path: /api/v3/store/inventory
+  port: 443
+  protocol: https
+  read_timeout: 5000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    name: store_inventory
+    path_handling: v0
+    paths:
+    - /store/inventory
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 5000
+- connect_timeout: 5000
+  host: petstore
+  name: store_order
+  path: /api/v3/store/order
+  port: 443
+  protocol: https
+  read_timeout: 5000
+  retries: 1
+  routes:
+  - hosts:
+    - localhost
+    https_redirect_status_code: 426
+    methods:
+    - GET
+    - POST
+    - DELETE
+    name: store_order
+    path_handling: v0
+    paths:
+    - /store/order
+    preserve_host: false
+    protocols:
+    - http
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 5000
+upstreams:
+- algorithm: round-robin
+  hash_fallback: none
+  hash_on: none
+  hash_on_cookie_path: /
+  healthchecks:
+    active:
+      concurrency: 10
+      healthy:
+        http_statuses:
+        - 200
+        - 302
+        interval: 0
+        successes: 0
+      http_path: /
+      https_verify_certificate: true
+      timeout: 1
+      type: http
+      unhealthy:
+        http_failures: 0
+        http_statuses:
+        - 429
+        - 404
+        - 500
+        - 501
+        - 502
+        - 503
+        - 504
+        - 505
+        interval: 0
+        tcp_failures: 0
+        timeouts: 0
+    passive:
+      healthy:
+        http_statuses:
+        - 200
+        - 201
+        - 202
+        - 203
+        - 204
+        - 205
+        - 206
+        - 207
+        - 208
+        - 226
+        - 300
+        - 301
+        - 302
+        - 303
+        - 304
+        - 305
+        - 306
+        - 307
+        - 308
+        successes: 0
+      type: http
+      unhealthy:
+        http_failures: 0
+        http_statuses:
+        - 429
+        - 500
+        - 503
+        tcp_failures: 0
+        timeouts: 0
+    threshold: 0
+  name: petstore
+  slots: 1000
+  targets:
+  - target: petstore3.swagger.io:443
+    weight: 552

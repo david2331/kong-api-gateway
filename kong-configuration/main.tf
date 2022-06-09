@@ -11,7 +11,7 @@ terraform {
 }
 
 provider "kong" {
-  kong_admin_uri = "http://localhost:8012"
+  kong_admin_uri = "http://localhost:8001"
 }
 
 
@@ -66,4 +66,24 @@ resource "kong_plugin" "rate_limit" {
         "minute": 5
     }
 EOT
+}
+
+
+#######################################
+# Enable global plugin: key-auth
+# #######################################
+resource "kong_plugin" "key-auth" {
+
+  name        = "key-auth"
+  config_json = <<EOT
+    {
+        "key_names": [
+              "x-api-key"
+        ],
+        "run_on_preflight": true,
+        "anonymous": null,
+        "hide_credentials": false,
+        "key_in_body": false
+    }
+    EOT
 }
